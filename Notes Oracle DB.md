@@ -234,7 +234,7 @@ Until you **COMMIT** a transaction:
 **Transactions**
 - A transaction is a sequence of SQL statements that Oracle Database treats as a single unit. This statement also erases all savepoints in the transaction and releases transaction locks.
 
-## Example of a Transaction in SQL
+## Example of a Transaction in SQL using an Employee Table example
 
 ```
 SET TRANSACTION NAME 'sal_update'; 
@@ -305,6 +305,15 @@ COMMIT;
 ##This statement commits all changes made in transaction sal_update2, ending the transaction. The commit guarantees that the changes are saved in the online redo log files.
 ```
 - ## Delete and Truncate
+**DELETE**
+- The DELETE function in SQL is used to remove one or more rows from a table based on specified conditions. 
+- It allows you to selectively delete specific records that meet certain criteria using the WHERE clause. 
+- The DELETE statement permanently removes data from the table, and the action can be rolled back if executed within a transaction.
+
+**Truncate**
+- The TRUNCATE function in SQL is used to remove all rows from a table, basically deleting all the data within it. Unlike the DELETE statement, which removes individual rows. 
+- TRUNCATE provides a more effective way to remove all data from a table by deleting the space occupied by the table's data pages.
+- TRUNCATE is a non-transactional operation, that is it cannot be rolled back. It quickly removes all data from a table without generating extensive transaction logs.
 ## Resources for Practising
 
  - [Live SQL - Practise Oracle SQL Online](https://livesql.oracle.com/apex/f?p=590:1000)
