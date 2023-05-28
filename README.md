@@ -180,10 +180,130 @@ where a.col1 is not null
     select * from table1
     full outer join table2 on table1.ID = table2.ID
     ```
+- ## Aggregates and Group By
+**GROUP BY** clause if you want the database to group the selected rows based on the value of expression for each row and return a single row of summary information (this information can be ***sum*** or ***average*** of all the grouped values or we can get ***minimum*** or ***maximum*** value from the group) for each group
+
+> This clause contains **CUBE** or **ROLLUP** extensions
+
+- **ROLLUP**
+    - The **ROLLUP** function in SQL is used to generate a result set that represents the grand totals of a given query, as well as intermediate subtotals. It allows you to specify multiple levels of aggregation, creating a hierarchical structure in the result set. ROLLUP computes the subtotals and the grand total for each specified level of grouping.
+- **CUBE**
+    - The **CUBE** function in SQL is similar to ROLLUP but provides even more flexibility. It generates a result set that includes all possible combinations of the specified columns for aggregation
 
 
 - ## Insert & Commit
+Example Command to Enter Values inside your Table
+
+**Single Row INSERT statement - Query to run when adding couple of information**
+```
+-- Suppose you have a Table Toys in which you want to enter information
+INSERT INTO Toys (
+    toy_name,
+    colour,
+    purchase_date,
+    cost
+) values (
+    'Iron Man', 'Red', 10-08-2016, 800
+)
+
+## Please Make sure to enter the correct Values for respective column
+```
+**Multi-Row INSERT statement - Query to copy all the records from one table to another**
+```
+-- Suppose you have a Table new_toys
+INSERT INTO new_toys ( select * from toys)
+
+## if the user wants to enter the same information into multiple tables then we can select multiple tables into INSERT statement to enter the same values in multiple specified tables
+```
+
+**COMMIT**
+
+Use the **COMMIT** statement to end your current transaction and make permanent all changes performed in the transaction.
+
+Until you **COMMIT** a transaction:
+- You can see any changes you have made during the transaction by querying the modified tables, but other users cannot see the changes. After you **COMMIT** the transaction, the changes are visible to other users' statements that execute after the commit.
+- You can roll back (undo) any changes made during the transaction with the **ROLLBACK** statement
+- Most of the SQL Clients have **Auto-Commit** functionality built-in which as the name suggest automatically **COMMIT** to the changes the user made, Please refer to the ***Preferences/Settings*** of your SQL Client to check which instances trigger auto-commit function
+
 - ## Update & Transactions
+**UPDATE**
+- The **UPDATE** function in SQL is used to modify existing records in a database table.
+- It allows you to change the values of one or more columns in one or multiple rows based on specified conditions. 
+- UPDATE statements typically include a SET clause to specify the new values and a WHERE clause to determine which rows should be updated.
+
+**Transactions**
+- A transaction is a sequence of SQL statements that Oracle Database treats as a single unit. This statement also erases all savepoints in the transaction and releases transaction locks.
+
+## Example of a Transaction in SQL
+
+```
+SET TRANSACTION NAME 'sal_update'; 
+
+## This statement begins a transaction and names it sal_update
+```
+```
+UPDATE employees 
+    SET salary = 7000 
+    WHERE last_name = 'Banda';
+
+## This statement updates the salary for Banda to 7000.
+```
+```
+SAVEPOINT after_banda_sal; 
+
+## This statement creates a savepoint named after_banda_sal, enabling changes in this transaction to be rolled back to this point.
+```
+```
+UPDATE employees
+    SET salary = 12000 
+    WHERE last_name = 'Greene';
+
+## This statement updates the salary for Greene to 12000.
+```
+```
+SAVEPOINT after_greene_sal; 
+
+## This statement creates a savepoint named after_greene_sal, enabling changes in this transaction to be rolled back to this point.
+```
+```
+ROLLBACK TO SAVEPOINT
+    after_banda_sal;
+
+## This statement rolls back the transaction to t3, undoing the update to Greene's salary at t4. The sal_update transaction has not ended.
+```
+```
+UPDATE employees
+    SET salary = 11000 
+    WHERE last_name = 'Greene';
+
+## This statement updates the salary for Greene to 11000 in transaction sal_update.
+```
+```
+ROLLBACK;
+
+## This statement rolls back all changes in transaction sal_update, ending the transaction.
+```
+```
+SET TRANSACTION NAME 'sal_update2';
+
+## This statement begins a new transaction in the session and names it sal_update2.
+```
+```
+UPDATE employees
+    SET salary = 7050 
+    WHERE last_name = 'Banda';
+
+UPDATE employees
+    SET salary = 10950 
+    WHERE last_name = 'Greene';
+
+## This statements updates the salary for Banda to 7050 and Greene to 10950
+```
+```
+COMMIT;
+
+##This statement commits all changes made in transaction sal_update2, ending the transaction. The commit guarantees that the changes are saved in the online redo log files.
+```
 - ## Delete and Truncate
 ## Resources for Practising
 
